@@ -1,4 +1,7 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable @typescript-eslint/comma-dangle */
+/* eslint-disable @typescript-eslint/semi */
+
 import { NextFunction, Router, Request, Response } from "express";
 import { LoginUser } from "../interface/addUser";
 

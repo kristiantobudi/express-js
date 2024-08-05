@@ -1,6 +1,8 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/comma-dangle */
+/* eslint-disable @typescript-eslint/quotes */
+/* eslint-disable @typescript-eslint/semi */
 import { Application, Router } from "express";
-import { ProductRouter } from "./product";
+import { ProductRouter } from "./product.routes";
 import { LoginRouter } from "./login";
 
 const _routes: Array<[string, Router]> = [

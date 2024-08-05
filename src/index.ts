@@ -1,20 +1,29 @@
-/* eslint-disable @typescript-eslint/semi */
-import express, { Application } from 'express';
-import dotenv from 'dotenv';
-import { routes } from './routes';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import config from './config/config';
+/* eslint-disable eol-last */
+import bodyParser from 'body-parser'
+import express, { Application } from 'express'
+import { routes } from './routes'
+import { logger } from './utils/logger'
+import cors from 'cors'
 
-dotenv.config();
+// connect DB
+import './utils/connectDB'
 
-const app: Application = express();
+const app: Application = express()
+const port: Number = 4000
 
-app.use(bodyParser.json());
-app.use(cors());
+// parse body request
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
-routes(app);
+// cors access handler
+app.use(cors())
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader('Access-Control-Allow-Methods', '*')
+  res.setHeader('Access-Control-Allow-Headers', '*')
+  next()
+})
 
-app.listen(config.port, () => {
-  console.log(`Server running on port @ ${config.hostUrl}`);
-});
+routes(app)
+
+app.listen(port, () => logger.info(`Server is listening on port ${port}`))
