@@ -3,11 +3,11 @@
 /* eslint-disable @typescript-eslint/semi */
 import { Application, Router } from "express";
 import { ProductRouter } from "./product.routes";
-import { LoginRouter } from "./login";
+import { AuthRouter } from "./auth.routes";
 
 const _routes: Array<[string, Router]> = [
   ["/product", ProductRouter],
-  ["/auth/login", LoginRouter],
+  ["/auth", AuthRouter],
 ];
 
 export const routes = (app: Application) => {

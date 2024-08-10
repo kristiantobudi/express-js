@@ -33,5 +33,7 @@ export const updateProductById = async (id: String, payload: ProductType) => {
 }
 
 export const deleteProductById = async (id: String) => {
-  return await productModel.findOneAndDelete({ product_id: id })
+  return await productModel.findOneAndDelete({
+    product_id: id
+  })
 }

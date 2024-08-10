@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/indent */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-multi-spaces */
 /* eslint-disable eol-last */
 import { Request, Response } from 'express'
@@ -65,16 +68,19 @@ export const deleteProduct = async (req: Request, res: Response) => {
   const  {
     params: { id }
   } = req
-
-  const { error } = deleteProductValidation(req.body)
-  if (error) {
-    logger.error('ERR: product - delete = ', error.details[0].message)
-    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
-  }
-
+  
   try {
-    await deleteProductById(id)
-    logger.info('Success delete product')
-    return res.status(200).send({ status: true, statusCode: 200, message: 'Delete product success' })
-  } catch (error) {}
+    const result  = await deleteProductById(id)
+
+    if (result) {
+      logger.info('Success delete product')
+      return res.status(200).send({ status: true, statusCode: 200, message: 'Delete product success' })
+    } else {
+      logger.info('Data not found')
+      return res.status(404).send({ status: true, statusCode: 404, message: 'Data not found' })
+    }
+  } catch (error) {
+    logger.error('ERR: product - delete = ', error)
+    return res.status(422).send({ status: false, statusCode: 422, message: error })
+  }
 }

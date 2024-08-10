@@ -6,9 +6,13 @@ import mongoose from "mongoose";
 import config from "../config/environment";
 import { logger } from "./logger";
 
-mongoose.connect(`${config.db}`).then(() => {
+mongoose.set('strictQuery', true);
+
+mongoose.connect(`${config.db}`)
+.then(() => {
     logger.info('Connected to MongoDB')
-}).catch((error) => {
+})
+.catch((error) => {
     logger.info('Failed to connect to MongoDB', error)
     logger.error(error)
     process.exit(1)

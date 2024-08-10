@@ -1,7 +1,9 @@
 /* eslint-disable eol-last */
 export default interface ProductType {
-  product_id: String
-  name: String
-  price: Number
-  size: String
+  product_id: string
+  name: string
+  price: number
+  size: string
+  description: string
+  status: string
 }

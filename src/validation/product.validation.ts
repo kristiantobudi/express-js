@@ -19,7 +19,7 @@ export const updateProductValidation = (payload: ProductType) => {
   const schema = Joi.object({
     product_name: Joi.string().allow('', null),
     price: Joi.number().allow('', null),
-    size: Joi.string().allow('', null),
+    size: Joi.number().allow('', null),
     description: Joi.string().allow('', null),
     status: Joi.string().allow('', null)
   })
@@ -31,7 +31,7 @@ export const deleteProductValidation = (payload: ProductType) => {
   const schema = Joi.object({
     product_name: Joi.string().allow('', null),
     price: Joi.number().allow('', null),
-    size: Joi.string().allow('', null),
+    size: Joi.number().allow('', null),
     description: Joi.string().allow('', null),
     status: Joi.string().allow('', null)
   })
