@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/semi */
 import { Application, Router } from "express";
-import { ProductRouter } from "./product.routes";
-import { AuthRouter } from "./auth.routes";
+import { ProductRouter } from "./product/product.routes";
+import { AuthRouter } from "./auth/auth.routes";
 
 const _routes: Array<[string, Router]> = [
   ["/product", ProductRouter],

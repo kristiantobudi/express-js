@@ -8,8 +8,13 @@ import cors from 'cors'
 // connect DB
 import './utils/connectDB'
 
+// deserializedUser
+import { deserializedUser } from './middleware/deserializedToken'
+
 const app: Application = express()
 const port: Number = 4000
+
+app.use(deserializedUser)
 
 // parse body request
 app.use(bodyParser.urlencoded({ extended: false }))

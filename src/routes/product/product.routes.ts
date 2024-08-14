@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/quotes */
 /* eslint-disable @typescript-eslint/semi */
 import { Router } from "express";
-import { createProduct, deleteProduct, getProduct, updateProduct } from "../controller/product.controller";
+import { createProduct, deleteProduct, getProduct, updateProduct } from "../../modules/products/controller/product.controller";
 
 export const ProductRouter: Router = Router();
 

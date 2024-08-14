@@ -18,3 +18,20 @@ export const signJWT = (payload: Record<string, any>, options?: jwt.SignOptions)
         throw new Error('Failed to sign JWT');
     }
 };
+
+export const verifyJWT = (token: string) => {
+    try {
+        const decode = jwt.verify(token, CONFIG.jwt_public);
+        return {
+            value: true,
+            expored: false,
+            decode
+        }
+    } catch (error: any) {
+        return {
+            valid: false,
+            expired: error.message === 'jwt is expired or not eligible to use',
+            decode: null
+        }
+    }
+}

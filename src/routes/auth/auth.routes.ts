@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable eol-last */
 import { Router } from "express";
-import { createSession, createUser, updateUser } from "../controller/auth.controller";
+import { createSession, createUser, updateUser } from "../../modules/auth/controller/auth.controller";
 
 export const AuthRouter: Router = Router();
 

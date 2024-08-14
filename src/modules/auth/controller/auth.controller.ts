@@ -8,12 +8,12 @@
 /* eslint-disable eol-last */
 /* eslint-disable @typescript-eslint/indent */
 import { Request, Response } from 'express'
-import { logger } from '../utils/logger'
-import { createSessionValidation, createUserValidation, updateUserValidation } from '../validation/auth.validation'
+import { logger } from '../../../utils/logger'
+import { createSessionValidation, createUserValidation, updateUserValidation } from '../../../validation/auth.validation'
 import { v4 as uuidv4 } from 'uuid'
-import { addUserToDB, findUserByEmail, updateUserById } from '../service/user.service'
-import { checkPassword, hashing } from '../utils/hashing'
-import { signJWT } from '../utils/jwt'
+import { addUserToDB, findUserByEmail, updateUserById } from '../../../service/user.service'
+import { checkPassword, hashing } from '../../../utils/hashing'
+import { signJWT } from '../../../utils/jwt'
 
 export const createUser = async (req: Request, res: Response) => {
     req.body.user_id = uuidv4()
