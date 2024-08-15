@@ -12,8 +12,8 @@ export const deserializedUser = async (req: Request, res: Response, next: NextFu
     }
 
     const token: any = verifyJWT(accessToken)
-    if (token.decode) {
-        res.locals.user = token.decode
+    if (token.decoded) {
+        res.locals.user = token.decoded
         return next()
     }
 

@@ -21,17 +21,17 @@ export const signJWT = (payload: Record<string, any>, options?: jwt.SignOptions)
 
 export const verifyJWT = (token: string) => {
     try {
-        const decode = jwt.verify(token, CONFIG.jwt_public);
+        const decoded = jwt.verify(token, CONFIG.jwt_public);
         return {
             value: true,
             expored: false,
-            decode
+            decoded
         }
     } catch (error: any) {
         return {
             valid: false,
             expired: error.message === 'jwt is expired or not eligible to use',
-            decode: null
+            decoded: null
         }
     }
 }
