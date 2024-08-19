@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable @typescript-eslint/return-await */
 /* eslint-disable no-multi-spaces */
-import { logger }  from '../utils/logger'
+import { logger }  from '../utils/log/logger'
 import userModel from '../models/auth/user.model'
 import UserType from '../types/auth.type'
 

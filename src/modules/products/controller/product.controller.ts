@@ -5,7 +5,7 @@
 /* eslint-disable eol-last */
 import { Request, Response } from 'express'
 import { addProductToDB, deleteProductById, getProductById, getProductFromDB, updateProductById } from '../../../service/product.service'
-import { logger } from '../../../utils/logger'
+import { logger } from '../../../utils/log/logger'
 import { createProductValidation, deleteProductValidation, updateProductValidation } from '../../../validation/product.validation'
 import { v4 as uuidv4 } from 'uuid'
 

@@ -2,7 +2,7 @@
 import bodyParser from 'body-parser'
 import express, { Application } from 'express'
 import { routes } from './routes'
-import { logger } from './utils/logger'
+import { logger } from './utils/log/logger'
 import cors from 'cors'
 
 // connect DB

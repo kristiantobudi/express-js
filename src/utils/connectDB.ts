@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/semi */
 import mongoose from "mongoose";
 import config from "../config/environment";
-import { logger } from "./logger";
+import { logger } from "./log/logger";
 
 mongoose.set('strictQuery', true);
 

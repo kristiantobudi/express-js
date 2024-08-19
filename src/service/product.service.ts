@@ -1,5 +1,5 @@
 /* eslint-disable eol-last */
-import { logger } from '../utils/logger'
+import { logger } from '../utils/log/logger'
 import productModel from '../models/product/product.model'
 import ProductType from '../types/product.type'
 

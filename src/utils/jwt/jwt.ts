@@ -6,7 +6,7 @@
 /* eslint-disable eol-last */
 /* eslint-disable rest-spread-spacing */
 import jwt from 'jsonwebtoken'
-import CONFIG from '../config/environment'
+import CONFIG from '../../config/environment'
 
 export const signJWT = (payload: Record<string, any>, options?: jwt.SignOptions) => {
     try {

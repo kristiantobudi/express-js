@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/semi */
 /* eslint-disable eol-last */
 import { NextFunction, Request, Response } from "express";
-import { verifyJWT } from "../utils/jwt";
+import { verifyJWT } from "../utils/jwt/jwt";
 
 export const deserializedUser = async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = req.headers.authorization?.replace(/^Bearer\s/, "");
