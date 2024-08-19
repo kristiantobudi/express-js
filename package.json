@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx tsc -w",
     "dev": "npx nodemon",
-    "build": "tsc",
+    "build": "tsc build --output public",
     "format": "prettier --write .",
     "prepare": "husky install",
     "check-types": "tsc --pretty --noEmit",
