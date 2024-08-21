@@ -21,5 +21,10 @@ export const deserializedUser = async (req: Request, res: Response, next: NextFu
         return next()
     }
 
+    const refreshToken = req.headers.authorization?.replace(/^Bearer\s/, "");
+    if (!refreshToken) {
+        return next();
+    }
+
     return next()
 }
