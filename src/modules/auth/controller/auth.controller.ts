@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 /* eslint-disable @typescript-eslint/space-before-function-paren */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -70,26 +71,27 @@ export const createSession = async (req: Request, res: Response) => {
 
 export const deleteSession = async (req: Request, res: Response) => {
     const { error, value } = deleteSessionValidation(req.body);
-
+  
     if (error) {
-        logger.error('ERR: session - delete = ', error.details[0].message);
-        return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message });
+      logger.error('ERR: session - delete = ', error.details[0].message);
+      return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message });
     }
-
+  
     try {
-        const { decoded }: any = verifyJWT(value.accessToken);
-        const user: any = await findUserByEmail(decoded.email);
-
-        if (!user) {
-            return res.status(404).send({ status: false, statusCode: 404, message: 'User not found' });
-        }
-
-        return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' });
+      const { decoded }: any = verifyJWT(value.accessToken);   
+  
+      const user: any = await findUserByEmail(decoded.email);
+  
+      if (!user) {
+        return res.status(404).send({ status: false, statusCode: 404, message: 'User not found' });
+      }
+  
+      return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' });
     } catch (error: any) {
-        logger.error('ERR: session - delete = ', error.message);
-        return res.status(500).send({ status: false, statusCode: 500, message: 'Internal Server Error' });
+      logger.error('ERR: session - delete = ', error.message);
+      return res.status(500).send({ status: false, statusCode: 500, message: 'Internal Server Error' });
     }
-}
+  };
 
 export const refreshSession = async (req: Request, res: Response) => {
     const { error, value } = refreshSessionValidation(req.body);
