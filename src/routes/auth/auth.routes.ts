@@ -9,4 +9,4 @@ export const AuthRouter: Router = Router();
 AuthRouter.post("/register", createUser)
 AuthRouter.post("/login", createSession)
 AuthRouter.put("/register/:id", updateUser)
-AuthRouter.delete("/logout", deleteSession)
+AuthRouter.post("/logout", deleteSession)
