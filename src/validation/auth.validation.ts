@@ -29,6 +29,13 @@ export const createSessionValidation = (payload: UserType) => {
     return schema.validate(payload)
 }
 
+export const deleteSessionValidation = (payload: UserType) => {
+    const schema = Joi.object({
+        accessToken: Joi.string().required(),
+    })
+    return schema.validate(payload)
+}
+
 export const updateUserValidation = (payload: UserType) => {
     const schema = Joi.object({
         username: Joi.string().allow('', null),

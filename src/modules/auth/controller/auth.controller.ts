@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/space-before-function-paren */
 /* eslint-disable no-multiple-empty-lines */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/semi */
@@ -9,7 +10,7 @@
 /* eslint-disable @typescript-eslint/indent */
 import { Request, Response } from 'express'
 import { logger } from '../../../utils/log/logger'
-import { createSessionValidation, createUserValidation, refreshSessionValidation, updateUserValidation } from '../../../validation/auth.validation'
+import { createSessionValidation, createUserValidation, deleteSessionValidation, refreshSessionValidation, updateUserValidation } from '../../../validation/auth.validation'
 import { v4 as uuidv4 } from 'uuid'
 import { addUserToDB, findUserByEmail, updateUserById } from '../../../service/user.service'
 import { checkPassword, hashing } from '../../../utils/hashing'
@@ -63,6 +64,29 @@ export const createSession = async (req: Request, res: Response) => {
         return res.status(200).send({ status: true, statusCode: 200, message: 'Session created successfully', data: { accessToken, refreshToken } })
     } catch (error: any) {
         logger.error('ERR: session - create session = ', error.message);
+        return res.status(500).send({ status: false, statusCode: 500, message: 'Internal Server Error' });
+    }
+}
+
+export const deleteSession = async(req: Request, res: Response) => {
+    const { error, value } = deleteSessionValidation(req.body);
+
+    if (error) {
+        logger.error('ERR: session - delete = ', error.details[0].message);
+        return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message });
+    }
+
+    try {
+        const { decoded }: any = verifyJWT(value.accessToken);
+        const user: any = await findUserByEmail(decoded.email);
+
+        if (!user) {
+            return res.status(404).send({ status: false, statusCode: 404, message: 'User not found' });
+        }
+
+        return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' })
+    } catch (error: any) {
+        console.log(error)
         return res.status(500).send({ status: false, statusCode: 500, message: 'Internal Server Error' });
     }
 }
