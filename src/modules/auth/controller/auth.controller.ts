@@ -77,10 +77,9 @@ export const deleteSession = async(req: Request, res: Response) => {
     }
 
     try {
-        const { decoded }: any = verifyJWT(value.accessToken);
-        const user: any = await findUserByEmail(decoded.email);
+        const accessToken = signJWT({ ...value }, { expiresIn: '1d' });
 
-        if (!user) {
+        if (!accessToken) {
             return res.status(404).send({ status: false, statusCode: 404, message: 'User not found' });
         }
 
