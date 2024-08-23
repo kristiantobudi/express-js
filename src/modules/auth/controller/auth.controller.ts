@@ -68,7 +68,7 @@ export const createSession = async (req: Request, res: Response) => {
     }
 }
 
-export const deleteSession = async(req: Request, res: Response) => {
+export const deleteSession = async (req: Request, res: Response) => {
     const { error, value } = deleteSessionValidation(req.body);
 
     if (error) {
@@ -77,15 +77,16 @@ export const deleteSession = async(req: Request, res: Response) => {
     }
 
     try {
-        const accessToken = signJWT({ ...value }, { expiresIn: '1d' });
+        const { decoded }: any = verifyJWT(value.accessToken);
+        const user: any = await findUserByEmail(decoded.email);
 
-        if (!accessToken) {
+        if (!user) {
             return res.status(404).send({ status: false, statusCode: 404, message: 'User not found' });
         }
 
-        return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' })
+        return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' });
     } catch (error: any) {
-        console.log(error)
+        logger.error('ERR: session - delete = ', error.message);
         return res.status(500).send({ status: false, statusCode: 500, message: 'Internal Server Error' });
     }
 }
