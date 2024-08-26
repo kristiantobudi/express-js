@@ -70,7 +70,7 @@ export const createSession = async (req: Request, res: Response) => {
 }
 
 export const deleteSession = async (req: Request, res: Response) => {
-    const { error } = deleteSessionValidation(req.body);
+    const { error } = deleteSessionValidation(req);
   
     if (error) {
       logger.error('ERR: session - delete = ', error.details[0].message);
