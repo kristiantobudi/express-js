@@ -78,13 +78,7 @@ export const deleteSession = async (req: Request, res: Response) => {
     }
   
     try {
-      const { decoded }: any = verifyJWT(value.accessToken);   
-  
-      const user: any = await findUserByEmail(decoded.email);
-  
-      if (!user) {
-        return res.status(404).send({ status: false, statusCode: 404, message: 'User not found' });
-      }
+      res.clearCookie('accessToken');
   
       return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' });
     } catch (error: any) {
