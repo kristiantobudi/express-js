@@ -7,6 +7,7 @@
 /* eslint-disable @typescript-eslint/semi */
 import Joi from "joi";
 import UserType from "../types/auth.type";
+import { Request } from "express";
 
 export const createUserValidation = (payload: UserType) => {
     const schema = Joi.object({
@@ -29,11 +30,12 @@ export const createSessionValidation = (payload: UserType) => {
     return schema.validate(payload)
 }
 
-export const deleteSessionValidation = (payload: UserType) => {
+export const deleteSessionValidation = (req: Request) => {
+    const accessToken = req.headers.authorization?.split(' ')[1];
     const schema = Joi.object({
-        accessToken: Joi.string().required()
+        accessToken: Joi.string().required(),
     })
-    return schema.validate(payload)
+    return schema.validate({ accessToken })
 }
 
 export const updateUserValidation = (payload: UserType) => {
