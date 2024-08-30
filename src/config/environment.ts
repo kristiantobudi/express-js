@@ -6,6 +6,8 @@
 import 'dotenv/config';
 
 const CONFIG = {
+    cmc_url: process.env.CMC_URL,
+    cmc_api_key: process.env.CMC_API_KEY,
     db: process.env.DB,
     jwt_public: `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA3wIpx332Sp8tceMeCHTP
