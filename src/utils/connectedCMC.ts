@@ -10,7 +10,7 @@ const url_api = process.env.CMC_URL
 
 export const getListingsLatest = async () => {
   try {
-    const response = await axios.get(`${url_api}/v1/cryptocurrency/listings/latest?start=1&limit=10&convert=USD&CMC_PRO_API_KEY=${cmc_api_key}`, {
+    const response = await axios.get(`${url_api}/v1/cryptocurrency/listings/latest`, {
       headers: {
         'X-CMC_PRO_API_KEY': cmc_api_key
       }
