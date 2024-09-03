@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { getCategories, getListingsLatest } from '../../../utils/connectedCMC'
+import { getCategories, getListingsLatest, getCategory } from '../../../utils/connectedCMC'
 
 export const getLatestCryptoListings = async (req: Request, res: Response) => {
   try {
@@ -19,11 +19,11 @@ export const getCryptoCategories = async (req: Request, res: Response) => {
   }
 }
 
-// export const getCryptoCategory = async (req: Request, res: Response) => {
-//   try {
-//     const data = await getCategory()
-//     res.json(data)
-//   } catch (error) {
-//     res.status(500).json({ error: 'Failed to fetch latest listings from CoinMarketCap' })
-//   }
-// }
+export const getCryptoCategory = async (req: Request, res: Response) => {
+  try {
+    const data = await getCategory()
+    res.json(data)
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch latest listings from CoinMarketCap' })
+  }
+}
