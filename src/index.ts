@@ -4,6 +4,7 @@ import express, { Application } from 'express'
 import { routes } from './routes'
 import { logger } from './utils/log/logger'
 import cors from 'cors'
+import helmet from 'helmet'
 
 // connect DB
 import './utils/connectDB'
@@ -19,6 +20,9 @@ app.use(deserializedUser)
 // parse body request
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+// set security HTTP headers
+app.use(helmet())
 
 // cors access handler
 app.use(cors())
