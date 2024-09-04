@@ -42,3 +42,35 @@ export const getCategories = async (): Promise<any> => {
     throw error
   }
 }
+
+export const getCategory = async (): Promise<any> => {
+  try {
+    const response: AxiosResponse = await axios.get(`${url_api}/v1/cryptocurrency/category`, {
+      headers: {
+        'Accept': 'application/json',
+        'X-CMC_PRO_API_KEY': cmc_api_key,
+      },
+    })
+
+    return response.data
+  } catch (error) {
+    console.log('Error fetching CoinMarketCap data:', error)
+    throw error
+  }
+}
+
+export const getMap = async (): Promise<any> => {
+  try {
+    const response: AxiosResponse = await axios.get(`${url_api}/v1/cryptocurrency/map`, {
+      headers: {
+        'Accept': 'application/json',
+        'X-CMC_PRO_API_KEY': cmc_api_key,
+      },
+    })
+
+    return response.data
+  } catch (error) {
+    console.log('Error fetching CoinMarketCap data:', error)
+    throw error
+  }
+}
