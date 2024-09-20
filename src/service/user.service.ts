@@ -6,9 +6,9 @@
 /* eslint-disable no-multi-spaces */
 import { logger }  from '../utils/log/logger'
 import userModel from '../models/auth/user.model'
-import UserType from '../types/auth.type'
+import UserTypeData from '../types/auth.type'
 
-export const addUserToDB = async (payload: UserType) => {
+export const addUserToDB = async (payload: UserTypeData) => {
     return await userModel.create(payload)
 }
 
@@ -28,7 +28,7 @@ export const getUserByID = async (id: String) => {
     return await userModel.findOne({ user_id: id })
 }
 
-export const updateUserById = async (id: String, payload: UserType) => {
+export const updateUserById = async (id: String, payload: UserTypeData) => {
     return await userModel.findOneAndUpdate({
         user_id: id
     }, {

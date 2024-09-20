@@ -1,6 +1,6 @@
 /* eslint-disable eol-last */
 /* eslint-disable @typescript-eslint/indent */
-export default interface UserType {
+export default interface UserTypeData {
     user_id: string
     username: string
     password: string
