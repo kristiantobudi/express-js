@@ -29,3 +29,7 @@ export const updateUserById = async (id: string, payload: UserType) => {
     $set: payload
   })
 }
+
+export const findUserByEmailName = async (email: string) => {
+  return await userModelManagement.findOne({ email })
+}
