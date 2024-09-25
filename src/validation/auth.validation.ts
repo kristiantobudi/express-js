@@ -8,14 +8,16 @@
 import Joi from "joi";
 import UserType from "../types/auth.type";
 import { Request } from "express";
+import RegisterType from "../types/registerType";
 
-export const createUserValidation = (payload: UserType) => {
+export const createUserValidation = (payload: RegisterType) => {
     const schema = Joi.object({
         user_id: Joi.string().required(),
         username: Joi.string().required(),
         password: Joi.string().required(),
-        first_name: Joi.string().required(),
-        last_name: Joi.string().required(),
+        confirm_password: Joi.string().required(),
+        first_name: Joi.string().allow('', null),
+        last_name: Joi.string().allow('', null),
         email: Joi.string().required(),
         role: Joi.string().allow('', null)
     })

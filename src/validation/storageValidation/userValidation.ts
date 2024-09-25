@@ -1,13 +1,15 @@
 import Joi from 'joi'
 import userType from '../../types/userType'
 import { Request } from 'express'
+import RegisterType from '../../types/registerType'
 
-export const createUserStorageValidation = (payload: userType) => {
+export const createUserStorageValidation = (payload: RegisterType) => {
   const schema = Joi.object({
     user_id: Joi.string().required(),
     username: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().required(),
+    confirm_password: Joi.string().required(),
     role: Joi.string().allow('', null)
   })
   return schema.validate(payload)

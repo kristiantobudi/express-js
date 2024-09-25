@@ -1,8 +1,9 @@
 import { logger } from '../../utils/log/logger'
 import userModelManagement from '../../models/strorageModel/auth/userModelManagement'
 import UserType from '../../types/userType'
+import RegisterType from '../../types/registerType'
 
-export const createUserFromDB = async (payload: UserType) => {
+export const createUserFromDB = async (payload: RegisterType) => {
   return await userModelManagement.create(payload)
 }
 
