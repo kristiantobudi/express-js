@@ -31,6 +31,16 @@ export const updateUserById = async (id: string, payload: UserType) => {
   })
 }
 
-export const findUserByEmailName = async (email: string) => {
-  return await userModelManagement.findOne({ email })
+export const findUserByUsername = async (username: string) => {
+  try {
+    const user = await userModelManagement.findOne({ username })
+
+    if (!user) {
+      logger.info(`User with username ${username} not found`)
+    }
+    return user
+  } catch (error) {
+    logger.error(`Error finding user with username ${username}: ${error}`)
+    throw new Error('Error retrieving user')
+  }
 }

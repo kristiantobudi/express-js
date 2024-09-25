@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { refreshSessionValidation, deleteSessionValidation, createUserStorageValidation, updateUserStorageValidation } from '../../../validation/storageValidation/userValidation'
-import { createUserFromDB, findUserByEmailName, getUserById, getUsers, updateUserById } from '../../../service/storageService/userService'
+import { refreshSessionValidation, deleteSessionValidation, createUserStorageValidation, updateUserStorageValidation, createSessionValidation } from '../../../validation/storageValidation/userValidation'
+import { createUserFromDB, findUserByUsername, getUserById, getUsers, updateUserById } from '../../../service/storageService/userService'
 import { checkPassword, hashing } from '../../../utils/hashing'
 import { signJWT, verifyJWT } from '../../../utils/jwt/jwt'
 import { logger } from '../../../utils/log/logger'
@@ -41,24 +41,24 @@ export const createUser = async (req: Request, res: Response) => {
 }
 
 export const createSession = async (req: Request, res: Response) => {
-  const { error, value } = createUserStorageValidation(req.body)
+  const { error, value } = createSessionValidation(req.body)
 
   if (error) {
     logger.error('ERR: session - create =', error.details[0].message)
     return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
   } try {
-    const user: any = await findUserByEmailName(value.email)
+    const user: any = await findUserByUsername(value.username)
 
     if (!user) {
-      logger.error(`ERR: session - create = user not found for email address ${value.email}`)
-      return res.status(401).json({ status: false, statusCode: 401, message: 'Invalid email or password' })
+      logger.error(`ERR: session - create = user not found for username address ${value.username}`)
+      return res.status(401).json({ status: false, statusCode: 401, message: 'Invalid username or password' })
     }
 
     const isValid = checkPassword(value.password, user.password)
 
     if (!isValid) {
-      logger.error(`ERR: session - create = Invalid password for email address ${value.email}`)
-      return res.status(401).json({ status: false, statusCode: 401, message: 'Invalid email or password' })
+      logger.error(`ERR: session - create = Invalid password for username address ${value.username}`)
+      return res.status(401).json({ status: false, statusCode: 401, message: 'Invalid username or password' })
     }
 
     const accessToken = signJWT({ ...user }, { expiresIn: '1d' })
@@ -94,7 +94,7 @@ export const refreshSession = async (req: Request, res: Response) => {
     return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
   } try {
     const { decoded }: any = verifyJWT(value.refreshToken)
-    const user: any = await findUserByEmailName(decoded.email)
+    const user: any = await findUserByUsername(decoded.username)
 
     if (!user) return false
     const accessToken = signJWT({

@@ -15,6 +15,14 @@ export const createUserStorageValidation = (payload: RegisterType) => {
   return schema.validate(payload)
 }
 
+export const createSessionValidation = (payload: userType) => {
+  const schema = Joi.object({
+    username: Joi.string().required(),
+    password: Joi.string().required()
+  })
+  return schema.validate(payload)
+}
+
 export const updateUserStorageValidation = (payload: userType) => {
   const schema = Joi.object({
     username: Joi.string().allow('', null),
