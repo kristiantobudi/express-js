@@ -26,9 +26,7 @@ export const getUser = async (req: Request, res: Response) => {
 
 export const createUser = async (req: Request, res: Response) => {
   req.body.user_id = uuidv4()
-
   const { error, value } = createUserStorageValidation(req.body)
-
   if (error) {
     logger.error('ERR: user - create = ', error.details[0].message)
     return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })

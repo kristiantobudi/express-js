@@ -6,7 +6,7 @@ const userModelSchema = new mongoose.Schema(
       type: String,
       unique: true
     },
-    name: {
+    username: {
       type: String,
       default: ''
     },
@@ -21,14 +21,6 @@ const userModelSchema = new mongoose.Schema(
     role: {
       type: String,
       default: ''
-    },
-    last_login_attempt: {
-      type: String,
-      default: ''
-    },
-    failed_login_count: {
-      type: Number,
-      default: 0
     }
   }
   , { timestamps: true }

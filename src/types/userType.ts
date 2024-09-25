@@ -4,6 +4,4 @@ export default interface userType {
   email: string
   password: string
   role: string
-  last_login_attempt: string
-  failed_login_count: number
 }

@@ -3,8 +3,8 @@ import { createUser, createSession, updateUser, deleteSession, getUser } from '.
 
 export const UserRouter: Router = Router()
 
-UserRouter.get('/v1/users', getUser)
-UserRouter.post('/v1/users/login', createSession)
-UserRouter.put('/v1/users/register/:id', createUser)
-UserRouter.put('/v1/users:id', updateUser)
-UserRouter.post('/v1/users/logout', deleteSession)
+UserRouter.get('/v1/auth', getUser)
+UserRouter.post('/v1/auth/login', createSession)
+UserRouter.post('/v1/auth/register', createUser)
+UserRouter.put('/v1/auth:id', updateUser)
+UserRouter.post('/v1/auth/logout', deleteSession)

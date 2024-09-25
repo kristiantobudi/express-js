@@ -5,7 +5,7 @@ import { Request } from 'express'
 export const createUserStorageValidation = (payload: userType) => {
   const schema = Joi.object({
     user_id: Joi.string().required(),
-    name: Joi.string().required(),
+    username: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().required(),
     role: Joi.string().allow('', null)
@@ -15,7 +15,7 @@ export const createUserStorageValidation = (payload: userType) => {
 
 export const updateUserStorageValidation = (payload: userType) => {
   const schema = Joi.object({
-    name: Joi.string().allow('', null),
+    username: Joi.string().allow('', null),
     email: Joi.string().allow('', null),
     password: Joi.string().allow('', null),
     role: Joi.string().allow('', null)

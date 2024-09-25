@@ -11,9 +11,9 @@ import { UserRouter } from "./storage/userRouter";
 const _routes: Array<[string, Router]> = [
   ["/product", ProductRouter],
   ["/cmc", CmcRouter],
-  ["/storage", CategoryRouter],
-  ["/storage", UserRouter],
-  ["/storage", ItemRouter]
+  ["/api", CategoryRouter],
+  ["/api", UserRouter],
+  ["/api", ItemRouter]
 ];
 
 export const routes = (app: Application) => {
