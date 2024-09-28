@@ -2,29 +2,26 @@ import mongoose from 'mongoose'
 
 const itemSchema = new mongoose.Schema(
   {
-    item_id: {
-      type: String,
-      unique: true
-    },
     item_name: {
       type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
+      default: '',
+      required: true
     },
     sku: {
       type: String,
-      default: ''
+      default: '',
+      unique: true
     },
     quantity: {
       type: Number,
-      default: 0
+      default: 0,
+      required: true
     },
-    category_id: {
-      type: String,
-      default: ''
+    category: {
+      type: mongoose.Schema.Types.ObjectId, reff: 'category', required: true
+    },
+    storage_location: {
+      type: mongoose.Schema.Types.ObjectId, reff: 'location', required: true
     }
   }, {
     timestamps: true
