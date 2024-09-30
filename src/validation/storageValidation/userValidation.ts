@@ -35,6 +35,9 @@ export const updateUserStorageValidation = (payload: userType) => {
 
 export const deleteSessionValidation = (req: Request) => {
   const accessToken = req.headers.authorization?.split(' ')[1]
+  if (!accessToken) {
+    return { error: { details: [{ message: 'accessToken is required' }] } }
+  }
   const schema = Joi.object({
     accessToken: Joi.string().required()
   })

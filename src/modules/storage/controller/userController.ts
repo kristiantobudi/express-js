@@ -77,8 +77,10 @@ export const deleteSession = async (req: Request, res: Response) => {
   if (error) {
     logger.error('ERR: session - delete = ', error.details[0].message)
     return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
-  } try {
-    res.clearCookie('accessToken')
+  }
+
+  try {
+    res.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'strict', path: '/' })
     return res.status(200).send({ status: true, statusCode: 200, message: 'Session deleted successfully' })
   } catch (error: any) {
     logger.error('ERR: session - delete = ', error.message)
