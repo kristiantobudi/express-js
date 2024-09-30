@@ -39,7 +39,7 @@ export const deleteSessionValidation = (req: Request) => {
     return { error: { details: [{ message: 'accessToken is required' }] } }
   }
   const schema = Joi.object({
-    accessToken: Joi.string().required()
+    accessToken: Joi.string()
   })
   return schema.validate({ accessToken })
 }
