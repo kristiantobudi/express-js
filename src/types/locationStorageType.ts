@@ -1,4 +1,5 @@
 export default interface storageTypes {
-  location_name: string
+  storage_id: string
+  storage_name: string
   description: string
 }

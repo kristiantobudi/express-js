@@ -4,20 +4,21 @@ import { v4 as uuidv4 } from 'uuid'
 import { Request, Response } from 'express'
 import { logger } from '../../..//utils/log/logger'
 
-export const createStorageLocation = async (req: Request, res: Response) => {
-  req.body.item = uuidv4()
+export const createStorage = async (req: Request, res: Response) => {
+  req.body.storage_id = uuidv4()
   const { error, value } = createStorageLocationValidation(req.body)
 
   if (error) {
     logger.error('ERR: storage - create = ', error.details[0].message)
     return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
-  } try {
+  }
+  try {
     await addstorageLocationToDB(value)
-    logger.info('Success create new')
-    return res.status(201).send({ status: true, statusCode: 200, message: error })
+    logger.info('Success create new storage location')
+    return res.status(201).send({ status: true, statusCode: 201, message: 'Storage created successfully' })
   } catch (error) {
     logger.error('ERR: storage - create = ', error)
-    return res.status(422).send({ status: false, statusCode: 422, message: error })
+    return res.status(500).send({ status: false, statusCode: 500, message: 'Internal Server Error' })
   }
 }
 
@@ -27,14 +28,14 @@ export const getStorageLocation = async (req: Request, res: Response) => {
   if (id) {
     const storageLocation = await getStorageLocationById(id)
     if (storageLocation) {
-      logger.info('Success get item data')
+      logger.info('Success get storage location')
       return res.status(200).send({ status: true, statusCode: 200, data: storageLocation })
     } else {
       return res.status(200).send({ status: true, statusCode: 404, data: {} })
     }
   } else {
     const storageLocation: any = await getStorageLocationFromDB()
-    logger.info('Success get item data')
+    logger.info('Success get storage location')
     return res.status(200).send({ status: true, statusCode: 200, data: storageLocation })
   }
 }

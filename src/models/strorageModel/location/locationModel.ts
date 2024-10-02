@@ -1,8 +1,8 @@
 import mongoose from 'mongoose'
 
-const locationSchema = new mongoose.Schema(
+const storageSchema = new mongoose.Schema(
   {
-    location_name: {
+    storage_name: {
       type: String,
       required: true
     },
@@ -15,6 +15,6 @@ const locationSchema = new mongoose.Schema(
   }
 )
 
-const storageLocationModel = mongoose.model('location_storage', locationSchema) || mongoose.models.location_storage
+const storageLocationModel = mongoose.model('location_storage', storageSchema) || mongoose.models.location_storage
 
 export default storageLocationModel
