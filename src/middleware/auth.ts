@@ -18,4 +18,5 @@ export const requireAdmin = (req: Request, res: Response, next: NextFunction) =>
     if (!user || user._doc.role !== 'admin'){
         return res.sendStatus(403)
     }
+    return next()
 }

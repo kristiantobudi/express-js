@@ -2,6 +2,23 @@ import stockModel from '../..//models/strorageModel/stock/stockModel'
 import stockType from '../../types/stockType'
 import { logger } from '../../utils/log/logger'
 
+interface StockDocument extends Document {
+  sequence_value: number
+}
+
+export const getNextSequenceStock = async (sequenceName: string): Promise<number> => {
+  const sequenceDocument = await stockModel.findByIdAndUpdate<StockDocument>(
+    { _id: sequenceName },
+    { $inc: { sequence_value: 1 } },
+    { new: true, upsert: true }
+  )
+
+  if (!sequenceDocument) {
+    throw new Error('Sequence not found')
+  }
+  return sequenceDocument.sequence_value
+}
+
 export const addStockToDB = async (payload: stockType) => {
   return await stockModel.create(payload)
 }

@@ -2,11 +2,23 @@ import mongoose from 'mongoose'
 
 const transactionSchema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      required: true
+    },
+    sequence_value: {
+      type: Number,
+      required: true
+    },
     item: {
-      type: mongoose.Schema.Types.ObjectId, ref: 'item', required: true
+      type: String,
+      ref: 'item',
+      required: true
     },
     user: {
-      type: mongoose.Schema.Types.ObjectId, ref: 'user', required: true
+      type: String,
+      ref: 'user',
+      required: true
     },
     action: {
       type: String,

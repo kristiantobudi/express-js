@@ -4,5 +4,4 @@ export default interface itemType {
   description: string
   sku: string
   quantity: number
-  category_id: string
 }

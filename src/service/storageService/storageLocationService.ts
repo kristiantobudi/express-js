@@ -2,6 +2,23 @@ import storageLocationModel from '../../models/strorageModel/location/locationMo
 import storageTypes from '../../types/locationStorageType'
 import { logger } from '../../utils/log/logger'
 
+interface StorageLocationDocument extends Document {
+  sequence_value: number
+}
+
+export const getNextSequenceStorageLocation = async (sequenceName: string): Promise<number> => {
+  const sequenceDocument = await storageLocationModel.findByIdAndUpdate<StorageLocationDocument>(
+    { _id: sequenceName },
+    { $inc: { sequence_value: 1 } },
+    { new: true, upsert: true }
+  )
+
+  if (!sequenceDocument) {
+    throw new Error('Sequence not found')
+  }
+  return sequenceDocument.sequence_value
+}
+
 export const addstorageLocationToDB = async (payload: storageTypes) => {
   return await storageLocationModel.create(payload)
 }

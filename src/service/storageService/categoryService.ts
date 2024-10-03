@@ -2,6 +2,23 @@ import { logger } from '../../utils/log/logger'
 import categoryModel from '../../models/strorageModel/categories/categoryModel'
 import CategoriesType from '../../types/categoryType'
 
+interface CategoriesDocument extends Document {
+  sequence_value: number
+}
+
+export const getNextSequenceCategories = async (sequenceName: string): Promise<number> => {
+  const sequenceDocument = await categoryModel.findByIdAndUpdate<CategoriesDocument>(
+    { _id: sequenceName },
+    { $inc: { sequence_value: 1 } },
+    { new: true, upsert: true }
+  )
+
+  if (!sequenceDocument) {
+    throw new Error('Sequence not found')
+  }
+  return sequenceDocument.sequence_value
+}
+
 export const addCategoryfromDB = async (payload: CategoriesType) => {
   return await categoryModel.create(payload)
 }

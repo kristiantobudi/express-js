@@ -2,6 +2,23 @@ import transactionDataType from '../../types/transactionDataType'
 import transactionDataModel from '../../models/strorageModel/transaction/transactionModel'
 import { logger } from '../../utils/log/logger'
 
+interface TransactionDataDocument extends Document {
+  sequence_value: number
+}
+
+export const getNextSequenceTransactionData = async (sequenceName: string): Promise<number> => {
+  const sequenceDocument = await transactionDataModel.findByIdAndUpdate<TransactionDataDocument>(
+    { _id: sequenceName },
+    { $inc: { sequence_value: 1 } },
+    { new: true, upsert: true }
+  )
+
+  if (!sequenceDocument) {
+    throw new Error('Sequence not found')
+  }
+  return sequenceDocument.sequence_value
+}
+
 export const addTransactionDataToDB = async (payload: transactionDataType) => {
   return await transactionDataModel.create(payload)
 }
