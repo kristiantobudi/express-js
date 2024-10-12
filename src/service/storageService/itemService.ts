@@ -34,9 +34,10 @@ export const updateItemById = async (id: string, payload: itemType) => {
   })
 }
 
-export const deleteItemById = async (id: string) => {
+export const deleteItemById = async (id: string, options?: any) => {
   return await itemModel.findOneAndDelete({
-    item_id: id
+    item_id: id,
+    ...options
   })
 }
 

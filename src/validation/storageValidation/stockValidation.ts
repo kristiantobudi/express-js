@@ -1,32 +1,23 @@
 import Joi from 'joi'
 import stockType from '../../types/stockType'
 
+const stockSchema = Joi.object({
+  item: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+  user: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+  action: Joi.string().valid('stock_in', 'stock_out', 'adjustment').required()
+})
+
 export const createStockValidation = (payload: stockType) => {
-  const schema = Joi.object({
-    item: Joi.string().required(),
-    user: Joi.string().required(),
-    quantity_change: Joi.number().required(),
-    reason: Joi.string().required()
-  })
-  return schema.validate(payload)
+  return stockSchema.validate(payload)
 }
 
 export const updateStockValidation = (payload: stockType) => {
-  const schema = Joi.object({
-    item: Joi.string().required(),
-    user: Joi.string().required(),
-    quantity_change: Joi.number().required(),
-    reason: Joi.string().required()
-  })
-  return schema.validate(payload)
+  return stockSchema.validate(payload)
 }
 
 export const deleteStockValidation = (payload: stockType) => {
-  const schema = Joi.object({
-    item: Joi.string().required(),
-    user: Joi.string().required(),
-    quantity_change: Joi.number().required(),
-    reason: Joi.string().required()
+  const deleteSchema = Joi.object({
+    item: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
   })
-  return schema.validate(payload)
+  return deleteSchema.validate(payload)
 }

@@ -1,6 +1,7 @@
 export default interface stockType {
   item: string
-  user: string
+  item_name: string
   quantity_change: number
-  reason: string
+  quantity: number
+  action: string
 }

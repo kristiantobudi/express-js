@@ -1,6 +1,5 @@
 import Joi from 'joi'
 import itemType from '../../types/itemType'
-
 export const createItemValidation = (payload: itemType) => {
   const schema = Joi.object({
     item_id: Joi.string().required(),

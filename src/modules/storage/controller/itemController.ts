@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { logger } from '../../../utils/log/logger'
 import { addItemToDB, getItemsFromDB, updateItemById, getItemById, deleteItemById, getNextSequenceValue } from '../../../service/storageService/itemService'
 import { createItemValidation, updateItemValidation } from '../../../validation/storageValidation/itemValidation'
+import { addStockToDB, deleteStockByIdLogic, updateStockDirectly } from '../../../service/storageService/stockService'
 
 export const createItem = async (req: Request, res: Response) => {
   try {
@@ -23,6 +24,15 @@ export const createItem = async (req: Request, res: Response) => {
     }
 
     await addItemToDB(value)
+
+    await addStockToDB({
+      item: value.item_id,
+      item_name: value.item_name,
+      quantity_change: value.quantity,
+      quantity: value.quantity,
+      action: 'stock_in'
+    })
+
     logger.info('Successfully created new item')
     return res.status(201).send({ status: true, statusCode: 201, message: 'Create item success' })
   } catch (error) {
@@ -61,7 +71,7 @@ export const getItem = async (req: Request, res: Response) => {
 }
 
 export const updateItem = async (req: Request, res: Response) => {
-  const { params: { id } } = req
+  const { id } = req.params
 
   const { error, value } = updateItemValidation(req.body)
 
@@ -73,6 +83,8 @@ export const updateItem = async (req: Request, res: Response) => {
   try {
     const updatedItem = await updateItemById(id, value)
     if (updatedItem) {
+      await updateStockDirectly(updatedItem._id.toString(), updatedItem.quantity)
+
       logger.info('Success update item with ID:', id)
       return res.status(200).send({ status: true, statusCode: 200, message: 'Update item success', data: updatedItem })
     } else {
@@ -86,20 +98,27 @@ export const updateItem = async (req: Request, res: Response) => {
 }
 
 export const deleteItem = async (req: Request, res: Response) => {
-  const { params: { id } } = req
+  const { id } = req.params
 
   try {
     const result = await deleteItemById(id)
 
     if (result) {
-      logger.info('Success delete item with ID:', id)
-      return res.status(200).send({ status: true, statusCode: 200, message: 'Delete item success' })
+      const stockDeleted = await deleteStockByIdLogic(id)
+
+      if (stockDeleted) {
+        logger.info(`Successfully deleted item and corresponding stock with ID: ${id}`)
+        return res.status(200).send({ status: true, statusCode: 200, message: 'Delete item and stock success' })
+      } else {
+        logger.warn(`Item deleted but no stock found for ID: ${id}`)
+        return res.status(200).send({ status: true, statusCode: 200, message: 'Item deleted but no stock found' })
+      }
     } else {
-      logger.warn('Data not found for delete with ID:', id)
-      return res.status(404).send({ status: false, statusCode: 404, message: 'Data not found' })
+      logger.warn(`Item not found for deletion with ID: ${id}`)
+      return res.status(404).send({ status: false, statusCode: 404, message: 'Item not found' })
     }
   } catch (error) {
-    logger.error('ERR: item - delete = ', error)
+    logger.error(`Error during item deletion with ID ${id}: ${error}`)
     return res.status(500).send({ status: false, statusCode: 500, message: 'Server error' })
   }
 }

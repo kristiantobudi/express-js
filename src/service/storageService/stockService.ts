@@ -36,16 +36,59 @@ export const getStockById = async (id: string) => {
   return await stockModel.findOne({ item: id })
 }
 
-export const updateStockById = async (id: string, payload: stockType) => {
-  return await stockModel.findOneAndUpdate({
-    item: id
-  }, {
-    $set: payload
-  })
+export const updateStockById = async (stockId: string, quantity: number) => {
+  const updatedStock = await stockModel.findByIdAndUpdate(stockId, { quantity }, { new: true })
+  return updatedStock
 }
 
 export const deleteStockById = async (id: string) => {
-  return await stockModel.findOneAndDelete({
-    item: id
-  })
+  try {
+    const result = await deleteStockById(id)
+
+    if (result) {
+      logger.info(`Successfully deleted stock with ID: ${id}`)
+      return true
+    } else {
+      logger.warn(`Stock with ID ${id} not found for deletion`)
+      return false
+    }
+  } catch (error) {
+    logger.error(`Error occurred while deleting stock with ID ${id}: ${error}`)
+    throw new Error('Stock deletion failed')
+  }
+}
+
+export const deleteStockByIdLogic = async (id: string) => {
+  try {
+    const result = await deleteStockById(id)
+
+    if (result) {
+      logger.info(`Successfully deleted stock with ID: ${id}`)
+      return true
+    } else {
+      logger.warn(`Stock with ID ${id} not found for deletion`)
+      return false
+    }
+  } catch (error) {
+    logger.error(`Error occurred while deleting stock with ID ${id}: ${error}`)
+    throw new Error('Stock deletion failed')
+  }
+}
+
+export const updateStockInDB = async (id: string, quantity: number): Promise<any> => {
+  const updatedStock = await stockModel.findOneAndUpdate(
+    { _id: id },
+    { $set: { quantity } },
+    { new: true }
+  )
+
+  if (!updatedStock) {
+    throw new Error('Stock not found')
+  }
+
+  return updatedStock
+}
+
+export const updateStockDirectly = async (id: string, quantity: number): Promise<any> => {
+  return await updateStockInDB(id, quantity)
 }
