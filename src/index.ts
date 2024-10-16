@@ -70,3 +70,5 @@ app.use(mongoSanitize())
 routes(app)
 
 app.listen(port, () => logger.info(`Server is listening on port ${port}`))
+
+export default app

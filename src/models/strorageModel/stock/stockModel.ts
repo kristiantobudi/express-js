@@ -1,24 +1,16 @@
 import mongoose from 'mongoose'
 
-const stockSchema = new mongoose.Schema(
-  {
-    item: {
-      type: mongoose.Schema.Types.String, ref: 'items', required: true
-    },
-    action: {
-      type: String,
-      enum: ['stock_in', 'stock_out', 'adjustment'],
-      required: true
-    },
-    quantity_change: {
-      type: Number,
-      required: true
-    }
-  }, {
-    timestamps: true
-  }
-)
+const stockSchema = new mongoose.Schema({
+  item: { type: String, required: true, unique: true },
+  itemName: { type: String, required: true },
+  quantity: { type: Number, required: true, default: 0 },
+  history: [{
+    action: { type: String, enum: ['stock_in', 'stock_out', 'adjustment'], required: true },
+    quantity: { type: Number, required: true },
+    date: { type: Date, default: Date.now }
+  }]
+}, { timestamps: true })
 
-const stockModel = mongoose.model('stock', stockSchema) || mongoose.models.stock
+const StockModel = mongoose.model('stock', stockSchema) || mongoose.models.stock
 
-export default stockModel
+export default StockModel

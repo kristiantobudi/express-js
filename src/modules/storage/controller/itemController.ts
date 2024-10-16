@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { logger } from '../../../utils/log/logger'
 import { addItemToDB, getItemsFromDB, updateItemById, getItemById, deleteItemById, getNextSequenceValue } from '../../../service/storageService/itemService'
 import { createItemValidation, updateItemValidation } from '../../../validation/storageValidation/itemValidation'
-import { addStockToDB, deleteStockByIdLogic, updateStockDirectly } from '../../../service/storageService/stockService'
+import { deleteStockByIdLogic, updateAggregatedStock, updateStockDirectly } from '../../../service/storageService/stockService'
 
 export const createItem = async (req: Request, res: Response) => {
   try {
@@ -23,18 +23,17 @@ export const createItem = async (req: Request, res: Response) => {
       return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
     }
 
-    await addItemToDB(value)
+    const newItem = await addItemToDB(value)
 
-    await addStockToDB({
-      item: value.item_id,
-      item_name: value.item_name,
-      quantity_change: value.quantity,
-      quantity: value.quantity,
+    await updateAggregatedStock({
+      id: newItem._id.toString(),
+      itemName: newItem.item_name,
+      quantity: newItem.quantity || 0,
       action: 'stock_in'
     })
 
-    logger.info('Successfully created new item')
-    return res.status(201).send({ status: true, statusCode: 201, message: 'Create item success' })
+    logger.info('Successfully created new item and updated stock')
+    return res.status(201).send({ status: true, statusCode: 201, message: 'Create item and update stock success' })
   } catch (error) {
     if (error instanceof Error) {
       logger.error('Error occurred during item creation:', error.message)
@@ -83,7 +82,11 @@ export const updateItem = async (req: Request, res: Response) => {
   try {
     const updatedItem = await updateItemById(id, value)
     if (updatedItem) {
-      await updateStockDirectly(updatedItem._id.toString(), updatedItem.quantity)
+      await updateStockDirectly({
+        id: updatedItem._id.toString(),
+        itemName: updatedItem.item_name,
+        quantity: updatedItem.quantity
+      })
 
       logger.info('Success update item with ID:', id)
       return res.status(200).send({ status: true, statusCode: 200, message: 'Update item success', data: updatedItem })

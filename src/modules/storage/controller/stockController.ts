@@ -2,6 +2,7 @@ import { createStockValidation } from '../../../validation/storageValidation/sto
 import { addStockToDB, deleteStockByIdLogic, getNextSequenceStock, getStockById, getStockFromDB, updateStockInDB } from '../../../service/storageService/stockService'
 import { Request, Response, NextFunction } from 'express'
 import { logger } from '../../..//utils/log/logger'
+import StockModel from '../../../models/strorageModel/stock/stockModel'
 
 export const createStock = async (req: Request, res: Response) => {
   try {
@@ -77,15 +78,48 @@ export const getStock = async (req: Request, res: Response) => {
   }
 }
 
+export const getStockData = async (req: Request, res: Response) => {
+  try {
+    const stockData = await StockModel.find({}).sort({ itemName: 1 })
+
+    return res.status(200).send({
+      status: true,
+      statusCode: 200,
+      message: 'Stock data retrieved successfully',
+      data: stockData
+    })
+  } catch (error) {
+    if (error instanceof Error) {
+      logger.error('Error occurred while fetching stock data:', error.message)
+      return res.status(500).send({ status: false, statusCode: 500, message: 'Server error', error: error.message })
+    } else {
+      logger.error('Unknown error occurred while fetching stock data')
+      return res.status(500).send({ status: false, statusCode: 500, message: 'Server error' })
+    }
+  }
+}
+
 export const updateStock = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params
-  const { quantity } = req.body
+  const { itemName, quantity } = req.body
 
   try {
-    const updatedStock = await updateStockInDB(id, quantity)
-    return res.status(200).send({ status: true, message: 'Stock updated successfully', data: updatedStock })
+    const updatedStock = await updateStockInDB({
+      id,
+      itemName,
+      quantity
+    })
+
+    return res.status(200).send({
+      status: true,
+      message: 'Stock updated successfully',
+      data: updatedStock
+    })
   } catch (error) {
-    return res.status(500).send({ status: false, message: `Error updating stock: ${error}` })
+    return res.status(500).send({
+      status: false,
+      message: `Error updating stock: ${error instanceof Error ? error.message : 'Unknown error'}`
+    })
   }
 }
 
