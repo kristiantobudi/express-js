@@ -7,7 +7,7 @@ import { UserRouter } from './storage/user.routes'
 import { TransactionDataRouter } from './storage/transactionData.routes'
 import { StorageLocationRouter } from './storage/storageLocation.routes'
 import { StockRouter } from './storage/stock.routes'
-import { FileRouter } from './storage/storageFile.routes'
+// import { FileRouter } from './storage/storageFile.routes'
 
 const _routes: Array<[string, Router]> = [
   ['/product', ProductRouter],
@@ -17,8 +17,8 @@ const _routes: Array<[string, Router]> = [
   ['/api', ItemRouter],
   ['/api', TransactionDataRouter],
   ['/api', StorageLocationRouter],
-  ['/api', StockRouter],
-  ['/api', FileRouter]
+  ['/api', StockRouter]
+  // ['/api', FileRouter]
 ]
 
 export const routes = (app: Application) => {
