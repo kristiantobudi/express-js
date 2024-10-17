@@ -63,7 +63,7 @@ describe('File Upload and Management', () => {
   it('should return 400 when trying to retrieve a file without a filename', async () => {
     const response = await request(app).get('/files/') // Invalid endpoint
 
-    expect(response.status).toBe(404) // Adjust if your routing responds differently
+    expect(response.status).toBe(404)
   })
 
   it('should return 400 when trying to retrieve a file with an invalid ID format', async () => {
