@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import { logger } from '../../../utils/log/logger'
-import { addItemToDB, getItemsFromDB, updateItemById, getItemById, deleteItemById, getNextSequenceValue } from '../../../service/storageService/itemService'
+import { addItemToDB, getItemsFromDB, getItemById, deleteItemById, getNextSequenceValue } from '../../../service/storageService/itemService'
 import { createItemValidation, updateItemValidation } from '../../../validation/storageValidation/itemValidation'
-import { deleteStockByIdLogic, updateAggregatedStock, updateStockDirectly } from '../../../service/storageService/stockService'
+import { deleteStockByIdLogic, updateAggregatedStock } from '../../../service/storageService/stockService'
+import itemModel from '../../../models/strorageModel/item/itemModel'
 
 export const createItem = async (req: Request, res: Response) => {
   try {
@@ -45,58 +46,109 @@ export const createItem = async (req: Request, res: Response) => {
   }
 }
 
-export const getItem = async (req: Request, res: Response) => {
-  const { params: { id } } = req
+export const getAllItems = async (req: Request, res: Response) => {
+  try {
+    const items = await getItemsFromDB()
+    logger.info('Successfully retrieved all items')
+    return res.status(200).json({
+      status: true,
+      statusCode: 200,
+      message: 'Items retrieved successfully',
+      data: items
+    })
+  } catch (error) {
+    logger.error('Error while getting all items:', error)
+    return res.status(500).json({
+      status: false,
+      statusCode: 500,
+      message: 'Server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
+  }
+}
+
+export const getitemById = async (req: Request, res: Response) => {
+  const { id } = req.params
 
   try {
-    if (id) {
-      const item = await getItemById(id)
-      if (item) {
-        logger.info('Success get item data')
-        return res.status(200).send({ status: true, statusCode: 200, data: item })
-      } else {
-        logger.warn('Data not found for ID:', id)
-        return res.status(404).send({ status: false, statusCode: 404, message: 'Data Not Found', data: {} })
-      }
+    const item = await getItemById(id)
+    if (item) {
+      logger.info(`Successfully retrieved item with ID: ${id}`)
+      return res.status(200).json({
+        status: true,
+        statusCode: 200,
+        message: 'Item retrieved successfully',
+        data: item
+      })
     } else {
-      const item = await getItemsFromDB()
-      logger.info('Success get all items')
-      return res.status(200).send({ status: true, statusCode: 200, data: item })
+      logger.warn(`Item not found with ID: ${id}`)
+      return res.status(404).json({
+        status: false,
+        statusCode: 404,
+        message: 'Item not found'
+      })
     }
   } catch (error) {
-    logger.error('ERR: item - get = ', error)
-    return res.status(500).send({ status: false, statusCode: 422, message: error })
+    logger.error(`Error while getting item with ID ${id}:`, error)
+    return res.status(500).json({
+      status: false,
+      statusCode: 500,
+      message: 'Server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
   }
 }
 
 export const updateItem = async (req: Request, res: Response) => {
-  const { id } = req.params
-
-  const { error, value } = updateItemValidation(req.body)
-
-  if (error) {
-    logger.error('ERR: item - update = ', error.details[0].message)
-    return res.status(422).send({ status: false, statusCode: 422, message: error.details[0].message })
-  }
-
   try {
-    const updatedItem = await updateItemById(id, value)
-    if (updatedItem) {
-      await updateStockDirectly({
-        id: updatedItem._id.toString(),
-        itemName: updatedItem.item_name,
-        quantity: updatedItem.quantity
-      })
+    const { id } = req.params
+    const updateData = req.body
 
-      logger.info('Success update item with ID:', id)
-      return res.status(200).send({ status: true, statusCode: 200, message: 'Update item success', data: updatedItem })
-    } else {
-      logger.warn('No item found for update with ID:', id)
-      return res.status(404).send({ status: false, statusCode: 404, message: 'Data not found for update' })
+    const { error, value } = updateItemValidation(updateData)
+    if (error) {
+      logger.error('Validation error:', error.details[0].message)
+      return res.status(422).json({
+        status: false,
+        statusCode: 422,
+        message: error.details[0].message
+      })
     }
+
+    const updatedItem = await itemModel.findByIdAndUpdate(id, value, { new: true, runValidators: true })
+
+    if (!updatedItem) {
+      logger.error(`Item not found with id: ${id}`)
+      return res.status(404).json({
+        status: false,
+        statusCode: 404,
+        message: 'Item not found'
+      })
+    }
+
+    if ('quantity' in value) {
+      await updateAggregatedStock({
+        id: updatedItem._id,
+        itemName: updatedItem.item_name,
+        quantity: updatedItem.quantity,
+        action: 'adjustment'
+      })
+    }
+
+    logger.info(`Successfully updated item with id: ${id}`)
+    return res.status(200).json({
+      status: true,
+      statusCode: 200,
+      message: 'Item updated successfully',
+      data: updatedItem
+    })
   } catch (error) {
-    logger.error('ERR: item - update = ', error)
-    return res.status(500).send({ status: false, statusCode: 500, message: 'Server error' })
+    logger.error('Error in updateItem:', error)
+    return res.status(500).json({
+      status: false,
+      statusCode: 500,
+      message: 'Server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
   }
 }
 
@@ -104,24 +156,44 @@ export const deleteItem = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
-    const result = await deleteItemById(id)
+    const deletedItem = await deleteItemById(id)
 
-    if (result) {
-      const stockDeleted = await deleteStockByIdLogic(id)
-
-      if (stockDeleted) {
-        logger.info(`Successfully deleted item and corresponding stock with ID: ${id}`)
-        return res.status(200).send({ status: true, statusCode: 200, message: 'Delete item and stock success' })
-      } else {
-        logger.warn(`Item deleted but no stock found for ID: ${id}`)
-        return res.status(200).send({ status: true, statusCode: 200, message: 'Item deleted but no stock found' })
-      }
-    } else {
+    if (!deletedItem) {
       logger.warn(`Item not found for deletion with ID: ${id}`)
-      return res.status(404).send({ status: false, statusCode: 404, message: 'Item not found' })
+      return res.status(404).json({
+        status: false,
+        statusCode: 404,
+        message: 'Item not found'
+      })
     }
+
+    let stockDeleted = await deleteStockByIdLogic(id)
+    try {
+      stockDeleted = await deleteStockByIdLogic(id)
+    } catch (stockError) {
+      logger.error(`Failed to delete stock for item with ID: ${id}`, stockError)
+      return res.status(500).json({
+        status: false,
+        statusCode: 500,
+        message: 'Stock deletion failed',
+        error: stockError instanceof Error ? stockError.message : 'Unknown stock deletion error'
+      })
+    }
+
+    logger.info(`Successfully deleted item with ID: ${id}. Stock ${stockDeleted ? 'was' : 'was not'} found and deleted.`)
+    return res.status(200).json({
+      status: true,
+      statusCode: 200,
+      message: 'Item deleted successfully',
+      stockDeleted
+    })
   } catch (error) {
-    logger.error(`Error during item deletion with ID ${id}: ${error}`)
-    return res.status(500).send({ status: false, statusCode: 500, message: 'Server error' })
+    logger.error(`Error during item deletion with ID ${id}:`, error)
+    return res.status(500).json({
+      status: false,
+      statusCode: 500,
+      message: 'Server error',
+      error: error instanceof Error ? error.message : 'Unknown error'
+    })
   }
 }

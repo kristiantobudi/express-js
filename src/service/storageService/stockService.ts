@@ -1,3 +1,4 @@
+import itemModel from '../../models/strorageModel/item/itemModel'
 import StockModel from '../../models/strorageModel/stock/stockModel'
 import stockType from '../../types/stockType'
 import { logger } from '../../utils/log/logger'
@@ -48,38 +49,12 @@ export const updateStockById = async (stockId: string, quantity: number) => {
   return updatedStock
 }
 
-export const deleteStockById = async (id: string) => {
-  try {
-    const result = await deleteStockById(id)
-
-    if (result) {
-      logger.info(`Successfully deleted stock with ID: ${id}`)
-      return true
-    } else {
-      logger.warn(`Stock with ID ${id} not found for deletion`)
-      return false
-    }
-  } catch (error) {
-    logger.error(`Error occurred while deleting stock with ID ${id}: ${error}`)
-    throw new Error('Stock deletion failed')
-  }
+export const deleteItemById = async (id: string) => {
+  return await itemModel.findByIdAndDelete(id)
 }
 
-export const deleteStockByIdLogic = async (id: string) => {
-  try {
-    const result = await deleteStockById(id)
-
-    if (result) {
-      logger.info(`Successfully deleted stock with ID: ${id}`)
-      return true
-    } else {
-      logger.warn(`Stock with ID ${id} not found for deletion`)
-      return false
-    }
-  } catch (error) {
-    logger.error(`Error occurred while deleting stock with ID ${id}: ${error}`)
-    throw new Error('Stock deletion failed')
-  }
+export const deleteStockByIdLogic = async (itemId: string) => {
+  return await StockModel.findOneAndDelete({ itemId })
 }
 
 export const updateStockInDB = async (updateData: StockUpdateData): Promise<any> => {
