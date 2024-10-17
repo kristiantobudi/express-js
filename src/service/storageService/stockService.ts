@@ -120,7 +120,7 @@ export const updateAggregatedStock = async (updateData: {
     } else if (action === 'stock_out') {
       newQuantity -= quantity
     } else {
-      newQuantity = quantity // For 'adjustment'
+      newQuantity = quantity
     }
 
     await StockModel.findOneAndUpdate(
