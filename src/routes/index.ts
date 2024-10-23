@@ -7,6 +7,7 @@ import { UserRouter } from './storage/user.routes'
 import { TransactionDataRouter } from './storage/transactionData.routes'
 import { StorageLocationRouter } from './storage/storageLocation.routes'
 import { StockRouter } from './storage/stock.routes'
+import { ImageRouter } from './storage/image.routes'
 // import { FileRouter } from './storage/storageFile.routes'
 
 const _routes: Array<[string, Router]> = [
@@ -17,7 +18,8 @@ const _routes: Array<[string, Router]> = [
   ['/api', ItemRouter],
   ['/api', TransactionDataRouter],
   ['/api', StorageLocationRouter],
-  ['/api', StockRouter]
+  ['/api', StockRouter],
+  ['/api', ImageRouter]
   // ['/api', FileRouter]
 ]
 

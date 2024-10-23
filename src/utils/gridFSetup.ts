@@ -1,12 +1,13 @@
-import mongoose from 'mongoose'
 import { GridFSBucket } from 'mongodb'
+import { Connection } from 'mongoose'
 
-let gridfsBucket: GridFSBucket
+let gfs: GridFSBucket
 
-export const initGridFS = (conn: mongoose.Connection) => {
-  gridfsBucket = new GridFSBucket(conn.db, {
-    bucketName: 'uploads'
+export const initGridFS = (connection: Connection) => {
+  gfs = new GridFSBucket(connection.db, {
+    bucketName: 'uploads' // This will create a bucket named 'uploads' in MongoDB
   })
+  console.log('GridFS Initialized')
 }
 
-export { gridfsBucket }
+export const getGridFSBucket = () => gfs
