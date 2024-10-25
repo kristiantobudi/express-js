@@ -1,6 +1,6 @@
 import { logger } from '../../../utils/log/logger'
 import { addSupplierToDB, deleteSupplierById, getNextSequenceSupplier, getSupplierById, getSupplierFromDB, updateSupplierById } from '../../../service/storageService/supplierService'
-import { createSupplierValidation } from '../../../validation/storageValidation/supplierValidation'
+import { createSupplierValidation, updateSupplierValidation } from '../../../validation/storageValidation/supplierValidation'
 import { Request, Response } from 'express'
 
 export const createSupplier = async (req: Request, res: Response) => {
@@ -63,7 +63,7 @@ export const getSupplier = async (req: Request, res: Response) => {
 export const updateSupplier = async (req: Request, res: Response) => {
   const { params: { id } } = req
 
-  const { error, value } = createSupplierValidation(req.body)
+  const { error, value } = updateSupplierValidation(req.body)
 
   if (error) {
     logger.error('Validation error:', error.details[0].message)
